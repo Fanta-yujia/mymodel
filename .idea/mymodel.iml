@@ -3,7 +3,7 @@
   <component name="NewModuleRootManager">
     <WolframLanguageLevel version="12.0" />
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Python 3.7 (ccs)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.8 (CCS)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="R User Library" level="project" />
     <orderEntry type="library" name="R Skeletons" level="application" />
