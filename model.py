@@ -83,11 +83,10 @@ def update_network(G, paras, tweet_num):
         update_node_status(G, node, p1, p2, p3, v2,v3)
 
 
-def new_model(G, paras, hot, t, max_de):
+def new_model(G, paras, hot, t):
     # hot = tweet_num / G.number_of_nodes()
     pubtime, r, fi, fa, v1, v2, v3 = paras
     p1 = get_p1(pubtime, t)
-    # p2 = (0.5 * hot + 0.5 * r) ** (np.log10(1 / fi))
     # p2 = (0.7 * hot + 0.3 * r) ** (np.log10(1 / fi))
     # p3 = (0.3 * hot + 0.7 * r) ** (np.log10(1 / fa))
     p3 = 0.3 * hot + 0.7 * r
@@ -96,7 +95,8 @@ def new_model(G, paras, hot, t, max_de):
         if G.nodes[node]['status'] == 'I':
             I_de = G.degree(node)
             # p2 = (0.5 * hot + 0.2 * r + 0.3*I_de/max_de) ** (np.log10(1 / fi))
-            p2 = 0.5* hot + 0.2 * r + 0.3 * I_de / max_de
+            # p2 = 0.4 * hot + 0.3 * r + 0.3 * I_de / max_de
+            p2 = 0.8 * hot + 0.3 * r
             for adj_node in G[node]:
                 if G.nodes[adj_node]['status'] == 'Si':
                     p = random.random()
@@ -136,6 +136,54 @@ def new_model(G, paras, hot, t, max_de):
                 G.nodes[node]['Satime'] -= v3
                 if G.nodes[node]['Satime'] <= 0:
                     G.nodes[node]['status'] = 'R'
+
+def SEIIR_model(G):
+    c=0.06
+    l=4
+    r=0.5
+    p1 = c ** (np.log10(l+1))
+    p1=0.7
+    p2 = (1-r) ** (np.log10(l+1))
+    p2 = 0.5
+    v1 =0.2
+    v2 = 0.2
+    v3 = 0.05
+    p3 = r
+    for node in G:
+        # 如果当前节点状态为 感染者(I) ,向每个邻居发消息
+        if G.nodes[node]['status'] == 'I':
+            for adj_node in G[node]:
+                if G.nodes[adj_node]['status'] == 'Si':
+                    p = random.random()
+                    if p < p1:
+                        G.nodes[adj_node]['status'] = 'E'
+                        G.nodes[adj_node]['Etime'] = 1
+                elif G.nodes[adj_node]['status'] == 'Sa':
+                    p = random.random()
+                    if p < p3:
+                        G.nodes[adj_node]['status'] = 'I'
+                        G.nodes[adj_node]['Itime'] = 1
+                        G.nodes[adj_node]['iftweet'] = True
+            p = random.random()
+            if p < p2:
+                G.nodes[node]['status'] = 'R'
+            else:
+                G.nodes[node]['Itime'] -= v3
+                if G.nodes[node]['Itime'] <= 0:
+                    G.nodes[node]['status'] = 'R'
+        elif G.nodes[node]['status'] == 'E':
+            p = random.random()
+            if p < v1:
+                G.nodes[node]['status'] = 'I'
+                G.nodes[node]['Itime'] = 1
+                G.nodes[node]['iftweet'] = True
+            else:
+                p = random.random()
+                if p < v2:
+                    G.nodes[node]['status'] = 'R'
+                # G.nodes[node]['Etime'] -= v2
+                # if G.nodes[node]['Etime'] <= 0:
+                #     G.nodes[node]['status'] = 'R'
 
 
 

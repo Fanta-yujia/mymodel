@@ -12,9 +12,9 @@ def build_network(graphtype,N):
     """
     print('正在建立图……')
     if graphtype == 'ba':
-        Graph = nx.barabasi_albert_graph(N, 5, seed=1)
+        Graph = nx.barabasi_albert_graph(N, 3, seed=1)
     elif graphtype == 'ws':
-        Graph = nx.watts_strogatz_graph(N, 10, 0.5)
+        Graph = nx.watts_strogatz_graph(N, 8, 0.5)
     elif graphtype == 'dataset':
         Graph = nx.Graph()
         data = pd.read_csv('D:\\FYJ\\follower_followee.csv', encoding='gbk')
@@ -45,7 +45,7 @@ def build_ego_network(N,m):
     return hub_ego, num_nodes
 
 
-def initial_network(G, sa_num):
+def initial_network(G):
     """
     初始化图数据
     :param G: 输入图
@@ -82,3 +82,24 @@ def initial_network(G, sa_num):
 
     print('初始化完毕')
     return max_de
+
+def initial_SEIIRnetwork(G):
+    print('正在初始化图……')
+    max_node, max_de, sa_set = find_maxdegree_node(G)
+    # sa_set=set(random.sample(G.nodes,10000))
+    # while i_set in sa_set:
+    #     sa_set = set(random.sample(G.nodes, 10000))
+    for node in G:
+        G.nodes[node]['iftweet'] = False
+        if node in sa_set:
+            if node == max_node:
+                G.nodes[node]['status'] = 'I'
+                G.nodes[node]['Itime'] = 1
+                G.nodes[node]['iftweet'] = True
+            else:
+                G.nodes[node]['status'] = 'Sa'
+        else:
+            G.nodes[node]['status'] = 'Si'
+            G.nodes[node]['readn'] = 0
+
+    print('初始化完毕')
