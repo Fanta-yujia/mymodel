@@ -143,7 +143,7 @@ def draw_network_compare(paras):
     """
 
     # 设定传播步长
-    t_list = np.linspace(1, 40, 40)
+    t_list = np.linspace(1, 50, 50)
     G1 = nx.read_gexf("dataset_G1.gexf")
     G2, num_nodes2 = build_network('ba',100000)
     G3, num_nodes3 = build_network('ws', 100000)
@@ -226,20 +226,20 @@ if __name__ == '__main__':
                   'tweet': '*-', 'read': 's-'}
     # # 创建网络
     # #G, num_nodes = build_network('dataset',20000)
-    G = nx.read_gexf("dataset_G1.gexf")
+    # G = nx.read_gexf("dataset_G1.gexf")
     # # # G, num_nodes = build_ego_network(100000,5)
 
     # # 初始化网络节点
-    num_nodes = G.number_of_nodes()
+    # num_nodes = G.number_of_nodes()
     # sa_num = int(num_nodes * 0.1)
-    max_de = initial_network(G)
-    print('该网络共有', num_nodes, '个点')
-    # # 开始传播
-    t_list = np.linspace(1,40,40)
-    print('步长为：', len(t_list))
-    node_list = start_diffusion(G, paras, t_list ,num_nodes)
-    # 输出节点趋势图
-    draw_node_trend(node_list,t_list)
+    # max_de = initial_network(G)
+    # print('该网络共有', num_nodes, '个点')
+    # # # 开始传播
+    # t_list = np.linspace(1,40,40)
+    # print('步长为：', len(t_list))
+    # node_list = start_diffusion(G, paras, t_list ,num_nodes)
+    # # 输出节点趋势图
+    # draw_node_trend(node_list,t_list)
 
     #
     # paras1 = [12, 0.5, 1/8, 1/2, 0.05, 0.3, 0.3]
@@ -263,4 +263,4 @@ if __name__ == '__main__':
 
     # draw_network_compare(paras)
 
-    # draw_model_compare(paras)
+    draw_model_compare(paras)

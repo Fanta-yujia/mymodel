@@ -12,9 +12,9 @@ def build_network(graphtype,N):
     """
     print('正在建立图……')
     if graphtype == 'ba':
-        Graph = nx.barabasi_albert_graph(N, 3, seed=1)
+        Graph = nx.barabasi_albert_graph(N, 5, seed=1)
     elif graphtype == 'ws':
-        Graph = nx.watts_strogatz_graph(N, 8, 0.5)
+        Graph = nx.watts_strogatz_graph(N, 10, 0.6)
     elif graphtype == 'dataset':
         Graph = nx.Graph()
         data = pd.read_csv('D:\\FYJ\\follower_followee.csv', encoding='gbk')
@@ -91,6 +91,30 @@ def initial_SEIIRnetwork(G):
     #     sa_set = set(random.sample(G.nodes, 10000))
     for node in G:
         G.nodes[node]['iftweet'] = False
+        if node in sa_set:
+            if node == max_node:
+                G.nodes[node]['status'] = 'I'
+                G.nodes[node]['Itime'] = 1
+                G.nodes[node]['iftweet'] = True
+            else:
+                G.nodes[node]['status'] = 'Sa'
+        else:
+            G.nodes[node]['status'] = 'Si'
+            G.nodes[node]['readn'] = 0
+
+    print('初始化完毕')
+
+
+def initial_SEIRnetwork(G):
+    print('正在初始化图……')
+    node_and_degree = Graph.degree()
+    sortedlist = sorted(node_and_degree, key=itemgetter(1))
+    (max_node, max_de) = sortedlist[-1]
+    print('度最大的节点', str(max_node), str(max_de))
+
+    for node in G:
+        G.nodes[node]['iftweet'] = False
+        G.nodes[node]['status'] = 'I'
         if node in sa_set:
             if node == max_node:
                 G.nodes[node]['status'] = 'I'

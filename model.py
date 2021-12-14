@@ -187,5 +187,49 @@ def SEIIR_model(G):
 
 
 
+def SEIR_model(G):
+    p1=0.7
+    p2 = 0.5
+    v1 =0.2
+    v2 = 0.2
+    v3 = 0.05
+    p3 = r
+    for node in G:
+        # 如果当前节点状态为 感染者(I) ,向每个邻居发消息
+        if G.nodes[node]['status'] == 'I':
+            for adj_node in G[node]:
+                if G.nodes[adj_node]['status'] == 'Si':
+                    p = random.random()
+                    if p < p1:
+                        G.nodes[adj_node]['status'] = 'E'
+                        G.nodes[adj_node]['Etime'] = 1
+                elif G.nodes[adj_node]['status'] == 'Sa':
+                    p = random.random()
+                    if p < p3:
+                        G.nodes[adj_node]['status'] = 'I'
+                        G.nodes[adj_node]['Itime'] = 1
+                        G.nodes[adj_node]['iftweet'] = True
+            p = random.random()
+            if p < p2:
+                G.nodes[node]['status'] = 'R'
+            else:
+                G.nodes[node]['Itime'] -= v3
+                if G.nodes[node]['Itime'] <= 0:
+                    G.nodes[node]['status'] = 'R'
+        elif G.nodes[node]['status'] == 'E':
+            p = random.random()
+            if p < v1:
+                G.nodes[node]['status'] = 'I'
+                G.nodes[node]['Itime'] = 1
+                G.nodes[node]['iftweet'] = True
+            else:
+                p = random.random()
+                if p < v2:
+                    G.nodes[node]['status'] = 'R'
+                # G.nodes[node]['Etime'] -= v2
+                # if G.nodes[node]['Etime'] <= 0:
+                #     G.nodes[node]['status'] = 'R'
+
+
 
 
